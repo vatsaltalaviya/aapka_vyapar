@@ -4,7 +4,7 @@ const BusinessDetails = require('../models/BusinessDetails');
 const calculateTotal = (item) => {
     let subTotal = item.quantity * item.price;
     let discount = (subTotal * item.discount) / 100;
-    let tax = item.tax || 0;
+    let tax = item.withTax ?(subTotal * item.tax) / 100 : 0;
     let totalAmount = subTotal;
 
     if (item.withTax) {
