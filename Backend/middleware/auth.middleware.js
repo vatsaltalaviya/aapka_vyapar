@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/User');
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjgxOTNiNGEwZjdmMzM5YTM5ODViZCIsImlhdCI6MTc0NzQ1ODM2MywiZXhwIjoxNzQ3NTQ0NzYzfQ.1uiXsisYqLno7M8RJLN4eWdaNaE3Ds-p4Lwl_01G3Gg
 
 module.exports.authUser = async (req, res, next) => {
     // Get token from headers
