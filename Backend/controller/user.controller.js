@@ -23,13 +23,20 @@ module.exports.registerUser = async (req, res) => {
 
     const user = await UserModel.create(userData);
     
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const Accesstoken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: '1d'
     });
+    const Refreshtoken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '7d'
+    });
+
+    res.cookie("AccessToken", Accesstoken)
+    res.cookie("RefreshToken", Refreshtoken)
 
     res.status(201).json({
         message: "User registered successfully",
-        token,
+        Accesstoken,
+        Refreshtoken,
         user
     });
 
@@ -49,13 +56,19 @@ module.exports.loginUser = async (req, res) => {
         return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+   const Accesstoken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: '1d'
     });
+    const Refreshtoken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '7d'
+    });
 
+    res.cookie("AccessToken", Accesstoken)
+    res.cookie("RefreshToken", Refreshtoken)
     res.status(200).json({
         message: "User login successfully",
-        token,
+        Accesstoken,
+        Refreshtoken,
         user
     });
   
@@ -122,14 +135,27 @@ module.exports.resetPassword = async (req, res) => {
     updateUser.otpexpiresAt = null;
     await updateUser.save();
 
-     const token = jwt.sign({ id: updateUser._id }, process.env.JWT_SECRET , {
+    const Accesstoken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: '1d'
     });
+    const Refreshtoken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '7d'
+    });
 
+    res.cookie("AccessToken", Accesstoken)
+    res.cookie("RefreshToken", Refreshtoken)
+    
     res.status(200).json({
             message: "updated password successfully",
-            token,
+            Accesstoken,
+            Refreshtoken,
             updateUser
         });
 
 }
+
+module.exports.profile = async (req, res) => {
+    res.status(200).json({
+        message: "User profile",
+        user: req.user});
+    }
