@@ -7,8 +7,11 @@ const calculateTotal = (item) => {
     let tax =  0;
     let totalAmount = subTotal;
 
+
     if (item.withTax) {
         tax = (subTotal * item.tax) / 100;
+        console.log(tax);
+        
         totalAmount = subTotal - discount + tax;
     } else {
         totalAmount = subTotal - discount;
@@ -17,8 +20,13 @@ const calculateTotal = (item) => {
     return { subTotal, discount, tax, totalAmount };
 }
 
+
+
+
 module.exports.addItem = async (req, res) => {
-    const { customerName, phoneNumber, items } = req.body;
+    const { customerName, phoneNumber, items ,paymentType , checkReference ,stateOfSupply , balanceDue} = req.body;
+
+    console.log(paymentType , checkReference ,stateOfSupply , balanceDue);
     const userId = req.user._id;
 
     if (!customerName || !phoneNumber || !items) {
@@ -46,9 +54,17 @@ module.exports.addItem = async (req, res) => {
             ...calculateTotal(item),
         }));
 
+        const finalTotal = itemDataArray.reduce((sum, item) => sum + item.totalAmount, 0);
+
+        console.log("Total amount",finalTotal);
+
         const newItem = {
             customerName,
             phoneNumber,
+            paymentType,
+            checkReference,
+            stateOfSupply,
+            balanceDue:finalTotal-balanceDue,
             items: itemDataArray,
             businessId: business._id
         };

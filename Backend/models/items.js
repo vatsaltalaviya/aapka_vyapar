@@ -40,9 +40,30 @@ const itemData = mongoose.Schema({
             discount: Number,
             tax: Number,
             totalAmount: Number,
-           
+            
         }
     ],
+    paymentType: {
+                type: String,
+                enum: ['Cash', 'Card', 'Check' , 'Upi', 'Net Banking'],
+                default: 'Cash',
+                required: true
+            },
+            checkReference: {
+                type: String,
+                required: function() {
+                    return this.paymentType === 'Check';
+                }
+            },
+            stateOfSupply: {
+                type: String,
+                required:false,
+            },
+            balanceDue: {
+                type: Number,
+                default: 0,
+                required: false,
+            },
     businessId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'BusinessDetails',
