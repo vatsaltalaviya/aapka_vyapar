@@ -2,45 +2,42 @@ const itemData = require('../models/items');
 const BusinessDetails = require('../models/BusinessDetails');
 
 const calculateTotal = (item) => {
-    let subTotal = item.quantity * item.price;
-    let discount = (subTotal * item.discount) / 100;
-    let tax =  0;
+    const subTotal = item.stock.quantity * item.Pricing.salePrice;
+    const discount = (subTotal * item.Pricing.Discount) / 100;
+    let tax = 0;
     let totalAmount = subTotal;
 
-
-    if (item.withTax) {
+    if (item.Pricing.withTax) {
         tax = (subTotal * item.tax) / 100;
-        console.log(tax);
-        
         totalAmount = subTotal - discount + tax;
     } else {
         totalAmount = subTotal - discount;
     }
 
-    return { subTotal, discount, tax, totalAmount };
-}
+    const totalStockAmount = item.stock.quantity * item.stock.stockPrice;
+
+    return { subTotal, discount, tax, totalAmount, totalStockAmount };
+};
 
 
-
-
+//add item
 module.exports.addItem = async (req, res) => {
-    const { customerName, phoneNumber, items ,paymentType , checkReference ,stateOfSupply , balanceDue} = req.body;
+    const {
+        itemName,
+        itemcode,
+        itemCategory,
+        HSNCode,
+        Pricing,
+        stock,
+        purchasePrice,
+        tax
+    } = req.body;
 
-    console.log(paymentType , checkReference ,stateOfSupply , balanceDue);
     const userId = req.user._id;
 
-    if (!customerName || !phoneNumber || !items) {
-        return res.status(400).json({ message: "Please fill all the fields" });
-    }
-
-    if (!Array.isArray(items) || items.length === 0) {
-        return res.status(400).json({ message: "Items array is required and cannot be empty" });
-    }
-
-    for (const item of items) {
-        if (!item.itemName || typeof item.price !== 'number' || typeof item.quantity !== 'number') {
-            return res.status(400).json({ message: "Each item must have itemName, price (number) and quantity (number)" });
-        }
+    // Validation
+    if (!itemName || !itemcode || !itemCategory || !HSNCode || !Pricing || !stock) {
+        return res.status(400).json({ message: "All required fields must be provided." });
     }
 
     try {
@@ -49,33 +46,29 @@ module.exports.addItem = async (req, res) => {
             return res.status(404).json({ message: "Business not found" });
         }
 
-        const itemDataArray = items.map(item => ({
-            ...item,
-            ...calculateTotal(item),
-        }));
+        const totals = calculateTotal({ Pricing, stock, tax });
 
-        const finalTotal = itemDataArray.reduce((sum, item) => sum + item.totalAmount, 0);
-
-        console.log("Total amount",finalTotal);
-
-        const newItem = {
-            customerName,
-            phoneNumber,
-            paymentType,
-            checkReference,
-            stateOfSupply,
-            balanceDue:finalTotal-balanceDue,
-            items: itemDataArray,
+        const newItem = await itemData.create({
+            itemName,
+            itemcode,
+            itemCategory,
+            HSNCode,
+            Pricing,
+            stock,
+            purchasePrice,
+            tax,
+            totalStockAmount: totals.totalStockAmount,
             businessId: business._id
-        };
+        });
 
-        const item = await itemData.create(newItem);
-        res.status(201).json({ message: "Item added successfully", data: item });
+        res.status(201).json({ message: "Item added successfully", data: newItem });
+
     } catch (error) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 }
 
+// Get all items
 module.exports.getAllItem = async (req, res) => {
     const userId = req.user._id;
 
@@ -94,22 +87,26 @@ module.exports.getAllItem = async (req, res) => {
     }
 }
 
+// Update item
 module.exports.updateItem = async (req, res) => {
     const { itemid } = req.params;
-    const { customerName, phoneNumber, items } = req.body;
+     const {
+        itemName,
+        itemcode,
+        itemCategory,
+        HSNCode,
+        Pricing,
+        stock,
+        purchasePrice,
+        tax
+    } = req.body;
+
     const userId = req.user._id;
 
-    if (!customerName || !phoneNumber || !items || !Array.isArray(items) || items.length === 0) {
-        return res.status(400).json({ message: "Please fill all the fields" });
+    // Validation
+    if (!itemName || !itemcode || !itemCategory || !HSNCode || !Pricing || !stock) {
+        return res.status(400).json({ message: "All required fields must be provided." });
     }
-
-    // Check every item has required fields
-    for (let item of items) {
-        if (!item.itemName || !item.quantity || !item.unit || !item.price || item.discount === undefined || item.withTax === undefined) {
-            return res.status(400).json({ message: "Each item must have itemName, quantity, unit, price, discount, and withTax" });
-        }
-    }
-
     try {
         const business = await BusinessDetails.findOne({ userId });
         if (!business) {
@@ -122,25 +119,26 @@ module.exports.updateItem = async (req, res) => {
         }
 
         // Calculate totals for new items
-        const updatedItems = items.map(item => ({
-            ...item,
-            ...calculateTotal(item),
-        }));
-
+       const totals = calculateTotal({ Pricing, stock, tax });
         // Update item data
-        existingItem.customerName = customerName;
-        existingItem.phoneNumber = phoneNumber;
-        existingItem.items = updatedItems;
+         existingItem.itemName = itemName;
+        existingItem.itemcode = itemcode;
+        existingItem.itemCategory = itemCategory;
+        existingItem.HSNCode = HSNCode;
+        existingItem.Pricing = Pricing;
+        existingItem.stock = stock;
+        existingItem.purchasePrice = purchasePrice;
+        existingItem.tax = tax;
+        existingItem.totalStockAmount = totals.totalStockAmount;
 
         await existingItem.save();
-
         res.status(200).json({ message: "Item updated successfully", data: existingItem });
 
     } catch (error) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
-
+// Delete item
 module.exports.deleteItem = async (req, res) => {
     const { itemid } = req.params;
     const userId = req.user._id;
