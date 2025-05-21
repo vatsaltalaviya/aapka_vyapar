@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const HSNSchema = new mongoose.Schema({
     hsnCode: {
-        type: String,
+        type: Number,
         required: true,
         default: ''
     },
