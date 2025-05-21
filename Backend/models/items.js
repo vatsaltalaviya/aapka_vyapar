@@ -7,79 +7,91 @@ const itemData = mongoose.Schema({
         trim: true
     },
     itemcode: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Barcode',
         required: true,
     
     },
     itemCategory:{
-        type: String,
-        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Category'
     },
     HSNCode:{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'HSN',
         required: true,
     },
+     unit:{
+                primaryUnit: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Unit',
+                    required: true
+                },
+                secondaryUnit: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'SecondaryUnit',
+                    required: false
+                }
+            },
     Pricing: 
         {
             salePrice: {
-                type: Number,
+                type: mongoose.Schema.Types.ObjectId,
+                ref:'SalePrice',
                 required: false,
                 trim: true
             },
             Discount: {
-                type: Number,
+                type: mongoose.Schema.Types.ObjectId,
+                ref:'discount',
                 required: false,
-                min: 1
+                min: 0
             },
           
             withTax: {
                 type: Boolean,
                 default: false
             },
-            
-            
         },
         stock: {
             quantity: {
-                type: Number,
-                required: false,
-                min: 0
+                type: mongoose.Schema.Types.ObjectId,
+                ref:"openingStock",
+              
             },
-            
             stockPrice:{
-                type: Number,
-                required: false,  
+                type: mongoose.Schema.Types.ObjectId,
+                ref:'stockPrice',
+               
             },
             minimumStock: {
-                type: Number,
-                required: false,
-                min: 0
+                type: mongoose.Schema.Types.ObjectId,
+                ref:'minstock'
             },
             stockDate: {
-                type: Date,
-                default: Date.now
+                type: mongoose.Schema.Types.ObjectId ,
+                ref:'stockDate'
             },
             itemLocation: {
-                type: String,
-                required: false
+                type: mongoose.Schema.Types.ObjectId,
+                ref:'itemLocation'
             }
         },
         purchasePrice: {
-            type: Number,
-            required: false,
-            trim: true
+            type: mongoose.Schema.Types.ObjectId,
+            ref:'purchasePrice'
         },
         tax: {
                 type: Number,
                 required: function() {
-                    return this.withTax;
+                    return this.Pricing?.withTax;
                 }
             },
-        totalStockAmount:{
-            type: Number,
-            required: false,
-            default: 0
-        },
+        // totalStockAmount:{
+        //     type: Number,
+        //     required: false,
+        //     default: 0
+        // },
     businessId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'BusinessDetails',

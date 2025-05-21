@@ -7,13 +7,15 @@ const calculateTotal = (item) => {
     let tax = 0;
     let totalAmount = subTotal;
 
+    // Check if tax is applicable
+    // If tax is applicable, calculate tax and total amount
     if (item.Pricing.withTax) {
         tax = (subTotal * item.tax) / 100;
         totalAmount = subTotal - discount + tax;
     } else {
         totalAmount = subTotal - discount;
     }
-
+    // Calculate total stock amount
     const totalStockAmount = item.stock.quantity * item.stock.stockPrice;
 
     return { subTotal, discount, tax, totalAmount, totalStockAmount };
@@ -22,6 +24,7 @@ const calculateTotal = (item) => {
 
 //add item
 module.exports.addItem = async (req, res) => {
+    //get data from request
     const {
         itemName,
         itemcode,
@@ -41,13 +44,17 @@ module.exports.addItem = async (req, res) => {
     }
 
     try {
+        // Check if the user has a business get userId from token or middleware
         const business = await BusinessDetails.findOne({ userId });
         if (!business) {
             return res.status(404).json({ message: "Business not found" });
         }
 
+        //get total from the function
+        //calculate total from price , stock and tax
         const totals = calculateTotal({ Pricing, stock, tax });
 
+        //create item
         const newItem = await itemData.create({
             itemName,
             itemcode,
@@ -70,6 +77,7 @@ module.exports.addItem = async (req, res) => {
 
 // Get all items
 module.exports.getAllItem = async (req, res) => {
+    //get userId from token or middleware
     const userId = req.user._id;
 
     try {
@@ -78,6 +86,7 @@ module.exports.getAllItem = async (req, res) => {
             return res.status(404).json({ message: "Business not found" });
         }
 
+        // get data using businessID
          const items = await itemData.find({ businessId: business._id });
         res.status(200).json({ message: "Items fetched successfully", data: items });
 
@@ -113,7 +122,9 @@ module.exports.updateItem = async (req, res) => {
             return res.status(404).json({ message: "Business not found" });
         }
 
+        // Check if the item exists in the database
         const existingItem = await itemData.findOne({ _id: itemid, businessId: business._id });
+        //if item not exist  
         if (!existingItem) {
             return res.status(404).json({ message: "Item not found" });
         }
@@ -131,6 +142,7 @@ module.exports.updateItem = async (req, res) => {
         existingItem.tax = tax;
         existingItem.totalStockAmount = totals.totalStockAmount;
 
+        // Save the updated item
         await existingItem.save();
         res.status(200).json({ message: "Item updated successfully", data: existingItem });
 

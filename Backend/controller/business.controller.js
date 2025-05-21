@@ -87,3 +87,37 @@ module.exports.updateBusinessDetails = async (req, res) => {
         updatedBusiness
     });
 }
+/*
+module.exports.getBusinessDetails = async (req, res) => {
+    const userId = req.user._id;
+
+    try {
+        const businessDetails = await BusinessDetails.find({ userId });
+        res.status(200).json({ message: "Business fetched successfully", data: businessDetails });
+        if (!businessDetails) {
+            return res.status(404).json({ message: "Business details not found" });
+        }   
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+}
+
+module.exports.deleteBusinessDetails = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deletedBusiness = await BusinessDetails.findByIdAndDelete({ _id: id, userId: req.user._id });
+        if (!deletedBusiness) {
+            return res.status(404).json({ message: "Business details not found" });
+        }
+
+        res.status(200).json({
+            message: "Business details deleted successfully",
+            deletedBusiness
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+}
+    */
