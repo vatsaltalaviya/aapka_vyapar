@@ -1,4 +1,4 @@
-const minStockQuantityModel = require('../models/minStockQuantity')
+const minStockQuantityModel = require('../../models/ItemFieldModels/minStockQuantity')
 
 module.exports.addMinStock = async (req, res) => {
     try {

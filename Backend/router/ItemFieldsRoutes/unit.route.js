@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {addUnit, updateUnit, deleteUnit} = require('../controller/unit.controller');
-const {authUser} = require('../middleware/auth.middleware');
+const {addUnit, updateUnit, deleteUnit} = require('../../controller/ItemFieldController/unit.controller');
+const {authUser} = require('../../middleware/auth.middleware');
 
 router.post('/', authUser ,addUnit)
 router.put('/:id', authUser ,updateUnit)

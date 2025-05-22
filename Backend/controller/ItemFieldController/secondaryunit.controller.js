@@ -1,4 +1,4 @@
-const SecondaryUnitModel = require('../models/SecondaryUnit');
+const SecondaryUnitModel = require('../../models/ItemFieldModels/SecondaryUnit');
 
 module.exports.addSecondaryUnit = async (req, res) => {
     const {secondaryUnit} = req.body;

@@ -1,4 +1,4 @@
-const PurchasePriceModel = require('../models/purchasePrice')
+const PurchasePriceModel = require('../../models/ItemFieldModels/purchasePrice')
 
 module.exports.addPurchasePrice = async (req, res) => {
     try {

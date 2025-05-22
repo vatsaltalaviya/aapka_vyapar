@@ -1,4 +1,4 @@
-const DiscountModel = require('../models/discount')
+const DiscountModel = require('../../models/ItemFieldModels/discount')
 
 module.exports.addDiscount = async (req, res) => {
     try {

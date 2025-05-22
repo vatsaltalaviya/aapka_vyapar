@@ -1,4 +1,4 @@
-const StockDateModel = require('../models/stockDate')
+const StockDateModel = require('../../models/ItemFieldModels/stockDate')
 
 module.exports.addStockDate = async (req, res) => {
     try {

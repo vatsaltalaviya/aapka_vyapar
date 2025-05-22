@@ -1,4 +1,4 @@
-const HSNModel = require('../models/HSN');
+const HSNModel = require('../../models/ItemFieldModels/HSN');
 
 module.exports.addHSN = async (req, res) => {
     const {hsnCode} = req.body;

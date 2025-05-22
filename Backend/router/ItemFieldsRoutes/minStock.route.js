@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {addMinStock, updateMinStock, deleteMinStock} = require('../controller/minStockQuantitiy.controller');
-const {authUser} = require('../middleware/auth.middleware');
+const {addMinStock, updateMinStock, deleteMinStock} = require('../../controller/ItemFieldController/minStockQuantitiy.controller');
+const {authUser} = require('../../middleware/auth.middleware');
 
 router.post('/', authUser ,addMinStock)
 router.put('/:id', authUser ,updateMinStock)

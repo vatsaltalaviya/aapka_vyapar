@@ -1,4 +1,4 @@
-const BarcodeModel = require('../models/Barcode');
+const BarcodeModel = require('../../models/ItemFieldModels/Barcode');
 
 module.exports.addBarcode = async (req, res) => {
     const {barcode} = req.body;

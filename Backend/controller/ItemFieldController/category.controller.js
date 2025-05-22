@@ -1,4 +1,4 @@
-const CategoryModel = require('../models/Category');
+const CategoryModel = require('../../models/ItemFieldModels/Category');
 
 module.exports.addCategory = async (req, res) => {
     try {

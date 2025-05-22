@@ -1,4 +1,4 @@
-const OpeningStockModel = require('../models/openingStock')
+const OpeningStockModel = require('../../models/ItemFieldModels/openingStock')
 
 module.exports.addOpenStock = async (req, res) => {
     try {

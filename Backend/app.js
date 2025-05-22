@@ -8,19 +8,21 @@ const db = require('./config/db');
 const userRouter = require('./router/user.route');
 const BusinessRouter = require('./router/business.route');
 const itemRouter = require('./router/item.route');
-const categoryRouter = require('./router/category.route');
-const BarcodeRouter = require('./router/barcode.route')
-const HsnRouter = require('./router/hsn.route')
-const UnitRouter = require('./router/unit.route')
-const secondaryUnitRouter = require('./router/secondaryUnit.route')
-const salePriceRouter = require('./router/salePrice.route')
-const discountRouter = require('./router/discount.route')
-const OpenStockRouter = require('./router/openStock.route')
-const stockPriceRouter = require('./router/stockPrice.route')
-const PurchasePriceRouter = require('./router/purchasePrice.route')
-const itemLocationRouter = require('./router/itemLocation.route')
-const StockDateRouter = require('./router/stockDate.route')
-const MinStockRouter = require('./router/minStock.route')
+
+// item fields route
+const categoryRouter = require('./router/ItemFieldsRoutes/category.route');
+const BarcodeRouter = require('./router/ItemFieldsRoutes/barcode.route')
+const HsnRouter = require('./router/ItemFieldsRoutes/hsn.route')
+const UnitRouter = require('./router/ItemFieldsRoutes/unit.route')
+const secondaryUnitRouter = require('./router/ItemFieldsRoutes/secondaryUnit.route')
+const salePriceRouter = require('./router/ItemFieldsRoutes/salePrice.route')
+const discountRouter = require('./router/ItemFieldsRoutes/discount.route')
+const OpenStockRouter = require('./router/ItemFieldsRoutes/openStock.route')
+const stockPriceRouter = require('./router/ItemFieldsRoutes/stockPrice.route')
+const PurchasePriceRouter = require('./router/ItemFieldsRoutes/purchasePrice.route')
+const itemLocationRouter = require('./router/ItemFieldsRoutes/itemLocation.route')
+const StockDateRouter = require('./router/ItemFieldsRoutes/stockDate.route')
+const MinStockRouter = require('./router/ItemFieldsRoutes/minStock.route')
 
 const cookieParser = require("cookie-parser");
 

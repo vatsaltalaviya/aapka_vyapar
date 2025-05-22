@@ -1,4 +1,4 @@
-const stockPriceModel = require('../models/stockPrice')
+const stockPriceModel = require('../../models/ItemFieldModels/stockPrice')
 
 module.exports.addStockPrice = async (req, res) => {
     try {

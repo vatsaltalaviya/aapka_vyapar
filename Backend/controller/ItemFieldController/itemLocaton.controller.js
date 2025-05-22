@@ -1,4 +1,4 @@
-const itemLocationkModel = require('../models/itemLocation')
+const itemLocationkModel = require('../../models/ItemFieldModels/itemLocation')
 
 module.exports.additemLocation = async (req, res) => {
     try {
